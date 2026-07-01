@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ViruSecurity</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/board.css" />
+  <link rel="stylesheet" href="css/modes.css" />
+</head>
+
+<body>
+  <div id="app">
+
+    <screen-menu
+      v-if="screen === 'menu'"
+      @start="onStart"
+    ></screen-menu>
+
+    <screen-game
+      v-else-if="screen === 'game'"
+      :game="game"
+      :mode="activeMode"
+      :difficulty="activeDifficulty"
+      :elapsed="elapsed"
+      @reveal="onReveal"
+      @warn="onWarn"
+      @new-game="goMenu"
+    ></screen-game>
+
+    <screen-result
+      v-else-if="screen === 'result'"
+      :game="game"
+      :elapsed="elapsed"
+      @new-game="goMenu"
+      @leaderboard="goLeaderboard"
+    ></screen-result>
+
+    <screen-leaderboard
+      v-else-if="screen === 'leaderboard'"
+      :mode="activeMode"
+      @back="goMenu"
+    ></screen-leaderboard>
+
+    <transition name="toast">
+      <div v-if="toast.visible" class="toast" :class="toast.type">
+        {{ toast.message }}
+      </div>
+    </transition>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

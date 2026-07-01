@@ -1,0 +1,22 @@
+{
+  "name": "virusecurity-backend",
+  "version": "1.0.0",
+  "description": "Backend for ViruSecurity — Minesweeper-inspired game with Detective, Maze and VirusZone modes",
+  "main": "app.js",
+  "scripts": {
+    "start":      "node app.js server",
+    "dev":        "node --watch app.js server",
+    "test":       "node app.js test 1000",
+    "test:modes": "node tests/modeTests.js 100",
+    "test:all":   "npm test && npm run test:modes",
+    "demo":       "node app.js demo"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "mysql2": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "ISC"
+}
