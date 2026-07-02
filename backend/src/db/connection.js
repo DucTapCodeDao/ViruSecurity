@@ -3,7 +3,8 @@
 const mysql = require("mysql2/promise");
 
 // Pool kết nối MySQL (chịu nhiều request đồng thời tốt hơn single connection),
-// config đọc từ .env, không hardcode credential.
+// config đọc từ .env (local) hoặc Environment Variables (Render/production).
+// DB_SSL=true khi dùng Aiven hoặc cloud MySQL bắt buộc SSL.
 const pool = mysql.createPool({
   host:              process.env.DB_HOST     || "localhost",
   port:              Number(process.env.DB_PORT || 3306),
@@ -11,13 +12,16 @@ const pool = mysql.createPool({
   password:          process.env.DB_PASS     || "",
   database:          process.env.DB_NAME     || "virusecurity",
   waitForConnections: true,
-  connectionLimit:   10,    // tối đa 10 connection song song
-  queueLimit:        0,     // queue không giới hạn khi pool đầy
-  timezone:          "Z",   // lưu datetime dạng UTC
+  connectionLimit:   10,
+  queueLimit:        0,
+  timezone:          "Z",
+
+  // SSL: bật khi DB_SSL=true (Aiven cloud), tắt khi local
+  ssl: process.env.DB_SSL === "true"
+    ? { rejectUnauthorized: false }
+    : undefined,
 });
 
-// Kiểm tra kết nối DB khi server khởi động, báo lỗi ngay thay vì để âm thầm
-// đến khi có request đầu tiên.
 async function testConnection() {
   let conn;
   try {
